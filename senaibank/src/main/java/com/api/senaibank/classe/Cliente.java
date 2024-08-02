@@ -1,6 +1,7 @@
 package com.api.senaibank.classe;
 
 import java.time.LocalDate;
+
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Data;
@@ -32,5 +33,8 @@ public class Cliente {
     @OneToOne
     @JoinColumn(name = "endereco_id", referencedColumnName = "id")
     private Endereco endereco;
+
+    @Column(name = "cliente_ativo", nullable = false)
+    private boolean ativo = true;
 
 }

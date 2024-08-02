@@ -19,7 +19,9 @@ public class TransacaoService {
     return transacaoRepository.findById(id).orElse(null);
  }
  public Transacao create(Transacao transacao){
-    return transacaoRepository.save(transacao);
+    if( transacao.getContaOrigem().temSaldo(transacao.getValor()) ) {
+   }
+   return transacaoRepository.save(transacao);
  }
  public Transacao update(Long id, Transacao transacao){
     Transacao transacaoAtualizar = transacaoRepository.findById(id).orElse(null);
@@ -31,6 +33,5 @@ public class TransacaoService {
  public void delete(Long id){
     transacaoRepository.deleteById(id);
  }
-
 
 }

@@ -17,9 +17,13 @@ public class ClienteController {
     private ClienteService clienteService;
 
     @PostMapping
-    public ResponseEntity<Cliente> criarClientes(@RequestBody Cliente cliente) {
-        Cliente novoCliente = clienteService.create(cliente);
-        return ResponseEntity.ok(novoCliente);
+    public ResponseEntity<?> criarClientes(@RequestBody Cliente cliente) {
+        try {
+            Cliente novoCliente = clienteService.create(cliente);
+            return ResponseEntity.ok(novoCliente);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping
@@ -30,7 +34,7 @@ public class ClienteController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Cliente> buscarClientePorId(@PathVariable Long id) {
-        Cliente cliente = clienteService.getByid(id);
+        Cliente cliente = clienteService.getById(id);
         if (cliente == null) {
             return ResponseEntity.notFound().build();
 
@@ -40,47 +44,23 @@ public class ClienteController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Cliente> atualizarCliente(@PathVariable Long id, @RequestBody Cliente cliente) {
-        Cliente clienteAtualizar = clienteService.getByid(id);
-        if (clienteAtualizar == null) {
-            return null;
-
-        }
-        if (clienteAtualizar.getNome() != null) {
-            clienteAtualizar.setNome(cliente.getNome());
-
-        }
-        if (clienteAtualizar.getCpf() != null) {
-            clienteAtualizar.setCpf(cliente.getCpf());
-
-        }
-        if (clienteAtualizar.getTelefone() != null) {
-            clienteAtualizar.setTelefone(cliente.getTelefone());
-
-        }
-        if (clienteAtualizar.getDatanascimento() != null) {
-            clienteAtualizar.setDatanascimento(cliente.getDatanascimento());
-            
-        }
-        if (clienteAtualizar.getEndereco() != null) {
-            clienteAtualizar.setEndereco(cliente.getEndereco());
-            
-        }
-        if (clienteAtualizar.getEmail() != null) {
-            clienteAtualizar.setEmail(cliente.getEmail());
-            
+        Cliente clienteSalvo = clienteService.getById(id);
+        if (clienteSalvo == null) {
+            return ResponseEntity.notFound().build();
         }
 
-        clienteService.create(clienteAtualizar);
-        return ResponseEntity.ok(clienteService.getByid(id));
+        clienteService.atualizarCliente(clienteSalvo, cliente);
+
+        return ResponseEntity.ok(clienteService.getById(id));
 
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarCliente(@PathVariable Long id) {
-        Cliente cliente = clienteService.getByid(id);
+    public ResponseEntity<Cliente> deletarCliente(@PathVariable Long id) {
+        
+        Cliente cliente = clienteService.getById(id);
         if (cliente == null) {
             return ResponseEntity.notFound().build();
-
         }
         clienteService.delete(id);
         return ResponseEntity.noContent().build();
