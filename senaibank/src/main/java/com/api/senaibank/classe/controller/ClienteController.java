@@ -25,6 +25,12 @@ public class ClienteController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+    @GetMapping("/ativos")
+    public ResponseEntity<List<Cliente>> getAllAtivos(){
+        List<Cliente> clientes = clienteService.getAllAtivos();
+        return ResponseEntity.ok(clientes);
+        
+    }
 
     @GetMapping
     public ResponseEntity<List<Cliente>> listarClientes() {

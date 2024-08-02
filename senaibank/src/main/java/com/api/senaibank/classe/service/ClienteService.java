@@ -21,6 +21,9 @@ public class ClienteService {
     public List<Cliente> getAll() {
         return clienteRepository.findAll();
     }
+    public List<Cliente> getAllAtivos(){
+        return clienteRepository.findByAtivoTrue();
+    }
 
     public Cliente getById(Long id) {
         return clienteRepository.findById(id).orElse(null);
