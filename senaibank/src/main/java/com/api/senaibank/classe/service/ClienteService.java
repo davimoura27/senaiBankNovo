@@ -21,27 +21,51 @@ public class ClienteService {
     public List<Cliente> getAll() {
         return clienteRepository.findAll();
     }
+    public List<Cliente> getAllAtivos(){
+        return clienteRepository.findByAtivoTrue();
+    }
 
-    public Cliente getByid(Long id) {
+    public Cliente getById(Long id) {
         return clienteRepository.findById(id).orElse(null);
     }
 
-    public Cliente atualizarCliente(Long id, Cliente cliente) {
-        Cliente clienteAtualizar = getByid(id);
-        if (clienteAtualizar == null) {
-            return null;
+    public Cliente atualizarCliente(Cliente clienteSalvo, Cliente clienteNovo) {
+
+        if (clienteNovo.getNome() != null) {
+            clienteSalvo.setNome(clienteNovo.getNome());
+        }
+        if (clienteNovo.getCpf() != null) {
+            clienteSalvo.setCpf(clienteNovo.getCpf());
+        }
+        if (clienteNovo.getTelefone() != null) {
+            clienteSalvo.setTelefone(clienteNovo.getTelefone());
+        }
+        if (clienteNovo.getDatanascimento() != null) {
+            clienteSalvo.setDatanascimento(clienteNovo.getDatanascimento());
+        }
+        if (clienteNovo.getEndereco() != null) {
+            clienteSalvo.setEndereco(clienteNovo.getEndereco());
+        }
+        if (clienteNovo.getEmail() != null) {
+            clienteSalvo.setEmail(clienteNovo.getEmail());  
+        }
+        if (clienteNovo.isAtivo() == false) {
+            clienteSalvo.setAtivo(false);
         }
 
-        clienteAtualizar.setNome(cliente.getNome());
-
-        clienteAtualizar.setCpf(cliente.getCpf());
-
-        clienteAtualizar.setTelefone(cliente.getTelefone());
-
-        return clienteRepository.save(clienteAtualizar);
+        return clienteRepository.save(clienteSalvo);
     }
 
-    public void delete(Long id) {
-        clienteRepository.deleteById(id);
+    public Cliente delete(Long id) {
+        
+        // clienteRepository.deleteById(id);
+
+        Cliente cliente = getById(id);
+
+        Cliente clienteInativo = new Cliente();
+        clienteInativo.setAtivo(false);
+
+        return atualizarCliente(cliente, clienteInativo);
+
     }
 }

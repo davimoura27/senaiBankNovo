@@ -27,6 +27,9 @@ public class Transacao {
     @Enumerated
     private TipoTransacao tipoTransacao;
 
+    @Column(nullable = false)
+    private double valor;
+
     @ManyToOne
     @JoinColumn(name = "conta_origem", referencedColumnName = "id")
     private Conta contaOrigem;
