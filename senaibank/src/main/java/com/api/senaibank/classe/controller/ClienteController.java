@@ -25,11 +25,12 @@ public class ClienteController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
     @GetMapping("/ativos")
-    public ResponseEntity<List<Cliente>> getAllAtivos(){
+    public ResponseEntity<List<Cliente>> getAllAtivos() {
         List<Cliente> clientes = clienteService.getAllAtivos();
         return ResponseEntity.ok(clientes);
-        
+
     }
 
     @GetMapping
@@ -50,20 +51,20 @@ public class ClienteController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Cliente> atualizarCliente(@PathVariable Long id, @RequestBody Cliente cliente) {
-        Cliente clienteSalvo = clienteService.getById(id);
-        if (clienteSalvo == null) {
+        Cliente clienteExistente = clienteService.getById(id);
+        if (clienteExistente == null) {
             return ResponseEntity.notFound().build();
         }
 
-        clienteService.atualizarCliente(clienteSalvo, cliente);
+        Cliente clienteSalvo = clienteService.atualizarCliente(id, clienteExistente, cliente);
 
-        return ResponseEntity.ok(clienteService.getById(id));
+        return ResponseEntity.ok(clienteSalvo);
 
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Cliente> deletarCliente(@PathVariable Long id) {
-        
+
         Cliente cliente = clienteService.getById(id);
         if (cliente == null) {
             return ResponseEntity.notFound().build();

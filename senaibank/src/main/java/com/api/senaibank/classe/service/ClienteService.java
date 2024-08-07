@@ -13,9 +13,19 @@ public class ClienteService {
 
     @Autowired
     private ClienteRepository clienteRepository;
+ 
+    @Autowired
+    private EmailService emailService;
 
     public Cliente create(Cliente cliente) {
-        return clienteRepository.save(cliente);
+      Cliente clienteNovo = clienteRepository.save(cliente);
+      sendEmailNotification(clienteNovo);
+      return clienteNovo;
+    }
+    private void sendEmailNotification(Cliente cliente){
+        String subject = "Bem vindo!";
+        String texto = "Você foi cadastrado com sucesso" + " " + cliente.getNome();
+        emailService.sendEmail(cliente.getEmail(), subject, texto);
     }
 
     public List<Cliente> getAll() {
@@ -29,7 +39,7 @@ public class ClienteService {
         return clienteRepository.findById(id).orElse(null);
     }
 
-    public Cliente atualizarCliente(Cliente clienteSalvo, Cliente clienteNovo) {
+    public Cliente atualizarCliente(Long id, Cliente clienteSalvo, Cliente clienteNovo) {
 
         if (clienteNovo.getNome() != null) {
             clienteSalvo.setNome(clienteNovo.getNome());
@@ -58,14 +68,14 @@ public class ClienteService {
 
     public Cliente delete(Long id) {
         
-        // clienteRepository.deleteById(id);
+          clienteRepository.deleteById(id);
 
         Cliente cliente = getById(id);
 
-        Cliente clienteInativo = new Cliente();
-        clienteInativo.setAtivo(false);
+       
+        cliente.setAtivo(false);
 
-        return atualizarCliente(cliente, clienteInativo);
+        return clienteRepository.save(cliente);
 
     }
 }

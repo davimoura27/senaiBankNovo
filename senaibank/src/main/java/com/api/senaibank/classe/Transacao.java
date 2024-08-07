@@ -1,5 +1,7 @@
 package com.api.senaibank.classe;
 
+import java.time.LocalDateTime;
+
 import com.api.senaibank.classe.tipotransacao.TipoTransacao;
 
 import jakarta.persistence.Column;
@@ -29,6 +31,8 @@ public class Transacao {
 
     @Column(nullable = false)
     private double valor;
+
+    private LocalDateTime data = LocalDateTime.now();
 
     @ManyToOne
     @JoinColumn(name = "conta_origem", referencedColumnName = "id")

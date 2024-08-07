@@ -1,26 +1,32 @@
 package com.api.senaibank.classe.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatusCode;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
+import com.api.senaibank.classe.service.ContaService;
 
 import com.api.senaibank.classe.Transacao;
 import com.api.senaibank.classe.service.TransacaoService;
 import java.util.List;
+@RestController
+@RequestMapping("transacao")
 public class TransacaoController {
 
     @Autowired
-    TransacaoService transacaoService;
+    private TransacaoService transacaoService;
+
+    @Autowired
+    private ContaService contaService;
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Transacao transacao){
-        if( transacao.getContaOrigem().temSaldo(transacao.getValor()) ) {
+        if( contaService.temSaldo(transacao)) {
             return ResponseEntity.ok(transacaoService.create(transacao));
         }
-        return ResponseEntity.badRequest().body("Saldo insuficiente");
+        return ResponseEntity.badRequest().build();
     }
     @GetMapping
     public ResponseEntity<List<Transacao>> getAll(){

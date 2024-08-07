@@ -19,12 +19,11 @@ public class Conta {
     @JoinColumn(name = "Clientes_id", referencedColumnName = " id")
     private Cliente cliente;
 
-    // Verificar o saldo antes de realizar a transferência
-    public boolean temSaldo(double valor){
-        if(this.getSaldo() >= valor) {
-            return true;
-        } 
-        return false;
+    public void depositar(double valor){
+        saldo += valor;
+    }
+    public void sacar(double valor){
+        saldo -=valor;
     }
 
 }

@@ -1,4 +1,5 @@
 package com.api.senaibank.classe.controller;
+
 import com.api.senaibank.classe.Conta;
 
 import com.api.senaibank.classe.service.ContaService;
@@ -15,48 +16,41 @@ public class ContaController {
 
     @Autowired
     private ContaService contaService;
-    
+
     @PostMapping
-    public ResponseEntity<Conta> criarConta(@RequestBody Conta conta){
-        Conta novaConta = contaService.create(conta);
-        return ResponseEntity.ok(novaConta);
+    public ResponseEntity<Conta> create(@RequestBody Conta conta) {
+        return ResponseEntity.ok(contaService.create(conta));
     }
+
     @GetMapping
-    public ResponseEntity<List<Conta>> listadeContas(){
-        List<Conta> contas = contaService.getAll();
-        return ResponseEntity.ok(contas);
-        
+    public ResponseEntity<List<Conta>> getAll() {
+
+        return ResponseEntity.ok(contaService.getAll());
+
     }
-    
+
     @GetMapping("/{id}")
-    public ResponseEntity<Conta> buscarContasPorId(@PathVariable Long id){
-     Conta conta = contaService.getByid(id);
-     if (conta == null) {
-        return ResponseEntity.notFound().build();
-         }
-         return ResponseEntity.ok(conta);
+    public ResponseEntity<Conta> getById(@PathVariable Long id) {
+
+        return ResponseEntity.ok(contaService.getByid(id));
     }
+
     @PutMapping("/{id}")
-    public ResponseEntity<Conta> atualizarConta(@PathVariable Long id, @RequestBody Conta contaAtualizada){
-       Conta conta = contaService.getByid(id);
-       if (conta == null) {
-        return null;
+    public ResponseEntity<Conta> update(@PathVariable Long id, @RequestBody Conta contaAtualizada) {
+        Conta contaExistente = contaService.getByid(id);
+        if (contaExistente == null) {
+            return ResponseEntity.notFound().build();
         }
-        conta.setSaldo(contaAtualizada.getSaldo());
-        return ResponseEntity.ok(conta);
+        contaExistente.setSaldo(contaAtualizada.getSaldo());
+        return ResponseEntity.ok(contaService.update(contaExistente, contaAtualizada));
 
-      
     }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarConta(@PathVariable Long id){
-       Conta conta = contaService.getByid(id);
-       if (conta == null) {
-        return ResponseEntity.notFound().build();
-        
-       }
-       contaService.delete(id);
-       return ResponseEntity.noContent().build();
+    public ResponseEntity<Void> deletarConta(@PathVariable Long id) {
+       
+        contaService.delete(id);
+        return ResponseEntity.noContent().build();
     }
-
 
 }

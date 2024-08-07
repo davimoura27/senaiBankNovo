@@ -20,6 +20,12 @@ public class EnderecoController {
  public ResponseEntity<Endereco> create(@RequestBody Endereco endereco){
     return ResponseEntity.ok(enderecoService.create(endereco));
  }
+ @PostMapping("/cep/{cep}")
+public ResponseEntity<Endereco> createEnderecoByCep(@PathVariable String cep){
+   return ResponseEntity.ok(enderecoService.create(enderecoService.getEnderecoByCep(cep)));
+}
+
+
  @GetMapping
  public ResponseEntity<List<Endereco>> getAll(){
     return ResponseEntity.ok(enderecoService.getAll());
